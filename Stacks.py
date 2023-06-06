@@ -9,6 +9,7 @@ def Expression_Converter(expression):
         "-": 1,
         "*": 2,
         "/": 2,
+        ")": 0
     }
     stack = []
     postfix_expression = ""
