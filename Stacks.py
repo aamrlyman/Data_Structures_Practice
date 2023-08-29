@@ -1,3 +1,4 @@
+from collections import deque
 # https://www.enjoyalgorithms.com/blog/application-of-stack-data-structure-in-programming
 # are expressions usually represented as strings?
 # What do you do about multi-digit numbers another for loop that adds all numbers to expression until an operator is reached?
@@ -10,11 +11,11 @@
 # For each element in the expression, do the following:
 # If it is an operand (a number), append it to the postfix expression.
 # If it is an operator, do the following:
-# If the stack is empty or the top of the stack is an opening parenthesis, push the operator onto the stack.
-# If the operator has higher precedence than the top of the stack, push it onto the stack.
-# If the operator has lower or equal precedence to the top of the stack, pop operators from the stack and append them to the postfix expression until a lower precedence operator or an opening parenthesis is encountered. Then push the current operator onto the stack.
-# If the operator is a closing parenthesis, pop operators from the stack and append them to the postfix expression until an opening parenthesis is encountered. Discard the opening and closing parentheses.
-# After scanning the entire expression, pop any remaining operators from the stack and append them to the postfix expression.
+    # If the stack is empty or the top of the stack is an opening parenthesis, push the operator onto the stack.
+    # If the operator has higher precedence than the top of the stack, push it onto the stack.
+    # If the operator has lower or equal precedence to the top of the stack, pop operators from the stack and append them to the postfix expression until a lower precedence operator or an opening parenthesis is encountered. Then push the current operator onto the stack.
+    # If the operator is a closing parenthesis, pop operators from the stack and append them to the postfix expression until an opening parenthesis is encountered. Discard the opening and closing parentheses.
+    # After scanning the entire expression, pop any remaining operators from the stack and append them to the postfix expression.
 # The postfix expression is the final output.
 # Let's apply these steps to the given expression "1 + 2 * 3":
 
@@ -30,8 +31,10 @@
 # After scanning the entire expression, pop the remaining operators from the stack and append them to the postfix expression: "1 2 3 * +"
 
 # Therefore, the postfix expression for "1 + 2 * 3" is "1 2 3 * +".
+# https://raj457036.github.io/Simple-Tools/prefixAndPostfixConvertor.html
 
-exp = "(1+2)*3"
+
+exp = "1+2*3"
 exp1 = "1+2*3"
 exp2 = "1+2"
 exp3 = "1*2"
@@ -47,38 +50,44 @@ def Expression_Converter(expression):
         ")": 0,
         "(": 0
     }
-    stack = []
+ 
+    stack = deque()
     postfix_expression = ""
-    for x in expression:
+    for x in expression: #(1+5)*(4+8)
         if x.isnumeric():
             postfix_expression += x
-        elif x == "(":
-            stack.append(x)
         elif x == ")":
-            for operator in range((len(stack) - 1), 0, -1):
-                if operator == "(":
+            stack_length = len(stack)
+            for index in range((stack_length - 1), -1, -1):
+                while stack[index] == "(":
                     stack.pop()
                     break
                 else:
                     postfix_expression += stack.pop()
-        elif len(stack) == 0:
+        elif len(stack) == 0 or stack[-1] == "(" or operators[x] > operators [stack[-1]]:
             stack.append(x)
-        else:
-            for operator in stack:
-                if operators[operator] >= operators[x]:
-                    postfix_expression += stack.pop()
-                stack.append(x)
-                break
+        elif operators[x] <= operators [stack[-1]]:
+            postfix_expression+= stack.pop()
+            stack.append(x)
     if len(stack) > 0:
-        for operator in stack:
+        while len(stack) > 0:
             postfix_expression += stack.pop()
     return postfix_expression
 
 
 
-print(Expression_Converter(exp))
-print(Expression_Converter(exp1))
-print(Expression_Converter(exp2))
-print(Expression_Converter(exp3))
-print(Expression_Converter(exp4))
+exp = "1+2*3"
+exp1 = "1+2*3"
+exp2 = "1+2"
+exp3 = "1*2"
+exp4 = "1*2+3"
+
+# print(Expression_Converter("1+5*4+8")) # 1 5 4 * + 8 +
+# print(Expression_Converter("(1+5)*(4+8)")) # 1 5 + 4 8 + *
+# print(Expression_Converter("1*5+4*8")) # 1 5 * 4 8 * +    CORRECT
+# print(Expression_Converter("1+5+4+8")) # 1 5 + 4 + 8 +    CORRECT
+# print(Expression_Converter("((1+5))+(4)+8")) # 1 5 + 4 + 8 +    NOT CORRECT
+print(Expression_Converter("(1+5)*3+4+8")) # 15+3*4+8+    NOT CORRECT
+
+
 
