@@ -34,11 +34,11 @@ from collections import deque
 # https://raj457036.github.io/Simple-Tools/prefixAndPostfixConvertor.html
 
 
-exp = "1+2*3"
-exp1 = "1+2*3"
-exp2 = "1+2"
-exp3 = "1*2"
-exp4 = "1*2+3"
+# exp = "1+2*3"
+# exp1 = "1+2*3"
+# exp2 = "1+2"
+# exp3 = "1*2"
+# exp4 = "1*2+3"
 
 
 def Expression_Converter(expression):
@@ -47,8 +47,8 @@ def Expression_Converter(expression):
         "-": 1,
         "*": 2,
         "/": 2,
-        ")": 0,
-        "(": 0
+        # ")": 0,
+        # "(": 0
     }
  
     stack = deque()
@@ -59,35 +59,40 @@ def Expression_Converter(expression):
         elif x == ")":
             stack_length = len(stack)
             for index in range((stack_length - 1), -1, -1):
-                while stack[index] == "(":
+                if stack[index] == "(":
                     stack.pop()
                     break
                 else:
                     postfix_expression += stack.pop()
-        elif len(stack) == 0 or stack[-1] == "(" or operators[x] > operators [stack[-1]]:
+        else:
+            while x != "(" and len(stack) != 0 and stack[-1] != "(" and operators[x] <= operators [stack[-1]]:
+                postfix_expression+= stack.pop()
             stack.append(x)
-        elif operators[x] <= operators [stack[-1]]:
-            postfix_expression+= stack.pop()
-            stack.append(x)
-    if len(stack) > 0:
-        while len(stack) > 0:
-            postfix_expression += stack.pop()
+    while len(stack) > 0:
+        postfix_expression += stack.pop()
     return postfix_expression
 
 
+def test(input: str, expected: str):
+    output = Expression_Converter(input)
+    status = "CORRECT" if output == expected else "FAILED"
+    print(status, input, output)
 
-exp = "1+2*3"
-exp1 = "1+2*3"
-exp2 = "1+2"
-exp3 = "1*2"
-exp4 = "1*2+3"
+# exp = "1+2*3"
+# exp1 = "1+2*3"
+# exp2 = "1+2"
+# exp3 = "1*2"
+# exp4 = "1*2+3"
 
-# print(Expression_Converter("1+5*4+8")) # 1 5 4 * + 8 +
-# print(Expression_Converter("(1+5)*(4+8)")) # 1 5 + 4 8 + *
-# print(Expression_Converter("1*5+4*8")) # 1 5 * 4 8 * +    CORRECT
-# print(Expression_Converter("1+5+4+8")) # 1 5 + 4 + 8 +    CORRECT
-# print(Expression_Converter("((1+5))+(4)+8")) # 1 5 + 4 + 8 +    NOT CORRECT
-print(Expression_Converter("(1+5)*3+4+8")) # 15+3*4+8+    NOT CORRECT
-
+test("1+2+3", "12+3+") # 1 2 + 3 +
+test("(1+2+3)", "12+3+") # 1 2 + 3 +
+test("1+5*4+8", "154*+8+") # 1 5 4 * + 8 +
+test("(1+5)*(4+8)", "15+48+*") # 1 5 + 4 8 + * CORRECT
+test("1*5+4*8", "15*48*+") # 1 5 * 4 8 * +    CORRECT
+test("1+5+4+8", "15+4+8+") # 1 5 + 4 + 8 +    CORRECT
+test("((1+5))+(4)+8", "15+4+8+") # 1 5 + 4 + 8 +    NOT CORRECT
+test("(1+5)*3+4+8", "15+3*4+8+") # 15+3*4+8+      CORRECT
+test("(4)", "4") # 4 CORRECT
+test("((4+5))", "45+") # 45+ CORRECT
 
 
