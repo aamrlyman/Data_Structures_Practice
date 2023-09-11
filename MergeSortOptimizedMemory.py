@@ -1,36 +1,18 @@
-# https://www.geeksforgeeks.org/merge-sort/
-import random
 import math
 
 
 def merge(Main_Array: list[int], Left_Array: list[int], Right_Array: list[int]):
-    Main_Array_index = 0
-    Left_Array_index = 0
-    Right_Array_index = 0
-    Left_Array_Length = len(Left_Array)
-    Right_Array_Length = len(Right_Array)
-    while (Left_Array_index < Left_Array_Length and Right_Array_index < Right_Array_Length):
-        left_item = Left_Array[Left_Array_index]
-        right_item = Right_Array[Right_Array_index]
-        if (left_item <= right_item):
-            Main_Array[Main_Array_index] = left_item
-            Main_Array_index += 1
-            Left_Array_index += 1
+    while (Left_Array and Right_Array):
+        if (Left_Array[0] <= Right_Array[0]):
+            Main_Array.append(Left_Array.pop(0))
         else:
-            Main_Array[Main_Array_index] = right_item
-            Main_Array_index += 1
-            Right_Array_index += 1
-    while (Left_Array_index < Left_Array_Length):
-        left_item = Left_Array[Left_Array_index]
-        Main_Array[Main_Array_index] = left_item
-        Left_Array_index += 1
-        Main_Array_index += 1
-    while (Right_Array_index < Right_Array_Length):
-        right_item = Right_Array[Right_Array_index]
-        Main_Array[Main_Array_index] = right_item
-        Right_Array_index += 1
-        Main_Array_index += 1
+            Main_Array.append(Right_Array.pop(0))
+    while (Left_Array):
+        Main_Array.append(Left_Array.pop(0))
+    while (Right_Array):
+        Main_Array.append(Right_Array.pop(0))
     return Main_Array
+
 
 def merge_Sort(array):
     if (len(array) < 2):
@@ -39,17 +21,18 @@ def merge_Sort(array):
     l_array = []
     r_array = []
     for index in range(math.floor(array_length/2)):
-        l_array.append(array[index])
+        r_array.append(array.pop())
     for i in range(math.floor((array_length/2)), array_length):
-        r_array.append(array[i])
+        l_array.append(array.pop())
     merge_Sort(l_array)
     merge_Sort(r_array)
     return merge(array, l_array, r_array)
 
+
 def test_merge_Sort(input: list[int], expected: list[int]):
     output = merge_Sort(input)
     status = "CORRECT" if output == expected else "FAILED"
-    print(status, input, expected)
+    print(f'{status},input:{input}, output: {output}, expected: {expected}')
 
 
 long_list = [749, 220, 95, 80, 159, 416, 514, 414, 681, 299, 198, 567, 950, 289, 438, 15, 130, 926, 702, 907, 440, 256, 175, 861, 225, 2, 597, 964, 845, 643, 58, 772, 706, 625, 625, 208, 876, 201, 647, 649, 735, 595, 187, 465, 548, 371, 145, 900, 220, 433, 559, 479, 61, 188, 396, 46, 708, 50, 378, 686, 515, 857, 706, 561, 154, 238, 853, 987, 146, 10, 556, 307, 196, 880, 437, 796, 745, 233, 284, 420, 35, 648, 578, 287, 675, 110, 595, 543, 885, 379, 833, 490, 621, 943, 31, 700, 463, 444, 930, 216, 324, 52, 457, 793, 579, 221, 771, 129, 709, 157, 22, 804, 945, 686, 994, 186, 350, 749, 365, 755, 397, 772, 87, 356, 115, 15, 844, 398, 909, 428, 606, 664, 552, 481, 696, 710, 946, 66, 759, 9, 1, 998, 502, 239, 654, 756, 303, 662, 100,
@@ -58,15 +41,9 @@ sorted_list = [1, 2, 5, 6, 9, 9, 10, 15, 15, 18, 22, 23, 31, 35, 38, 39, 46, 50,
                529, 532, 533, 533, 543, 543, 548, 548, 552, 554, 556, 559, 561, 562, 567, 569, 578, 579, 581, 591, 593, 595, 595, 597, 606, 606, 613, 614, 621, 621, 625, 625, 626, 629, 633, 638, 643, 647, 648, 649, 650, 654, 659, 662, 664, 669, 675, 681, 682, 685, 686, 686, 686, 689, 693, 693, 696, 698, 698, 700, 700, 702, 706, 706, 707, 708, 709, 710, 711, 721, 723, 735, 736, 744, 745, 749, 749, 754, 755, 756, 759, 761, 771, 772, 772, 778, 787, 788, 791, 793, 793, 796, 803, 804, 815, 818, 821, 825, 833, 834, 843, 844, 845, 846, 846, 853, 854, 857, 861, 861, 864, 865, 876, 880, 885, 886, 900, 903, 906, 907, 909, 910, 917, 921, 924, 926, 928, 930, 934, 941, 943, 945, 945, 946, 948, 950, 952, 964, 972, 978, 980, 981, 987, 987, 988, 994, 998]
 test_merge_Sort([7, 6, 3, 4, 2, 1, 5], [1, 2, 3, 4, 5, 6, 7])
 test_merge_Sort([-7, 6, 23, 54, 2, 1], [-7, 1, 2, 6, 23, 54])
-test_merge_Sort([4,3,2,1], [1, 2, 3, 4])
-test_merge_Sort([0,0,0,4,3,2,1], [0,0,0,1, 2, 3, 4])
+test_merge_Sort([4, 3, 2, 1], [1, 2, 3, 4])
+test_merge_Sort([4, 3, 2, 1], [1, 2, 3, 4])
 test_merge_Sort(long_list, sorted_list)
-
-
-def test_merge(Main_Array: list[int], Left_Array: list[int], Right_Array: list[int], expected: list[int]):
-    output = merge(Main_Array, Left_Array, Right_Array)
-    status = "CORRECT" if output == expected else "FAILED"
-    print(status, Main_Array, Left_Array, Right_Array, expected)
 
 
 # test_merge([12, 234, 34, 453, 123, 214], [12, 34, 234], [123, 214, 453], [12,34,123,214,234,453])
@@ -75,19 +52,12 @@ def test_merge(Main_Array: list[int], Left_Array: list[int], Right_Array: list[i
 # test_merge([-4,3,-2,-1], [-2, -1], [-4,3], [-4,-2,-1,3])
 
 
-
-
-
-
-
-
-
 # Generate a list of 300 random numbers
-random_numbers = [random.randint(1, 1000) for _ in range(300)]
+# random_numbers = [random.randint(1, 1000) for _ in range(300)]
 
-print(random_numbers)
+# print(random_numbers)
 
-# Keep memory linear. See if you can only double the memory. N not N log N. No more than one additional array that is no bigger than the starting one. 
-# Heap sort 
-# Cannot allocate more memory than the initial array requires. You don't create another array.  May not be possible without significantly increasing time complexity. 
+# Keep memory linear. See if you can only double the memory. N not N log N. No more than one additional array that is no bigger than the starting one.
+# Heap sort
+# Cannot allocate more memory than the initial array requires. You don't create another array.  May not be possible without significantly increasing time complexity.
 

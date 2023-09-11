@@ -34,21 +34,12 @@ from collections import deque
 # https://raj457036.github.io/Simple-Tools/prefixAndPostfixConvertor.html
 
 
-# exp = "1+2*3"
-# exp1 = "1+2*3"
-# exp2 = "1+2"
-# exp3 = "1*2"
-# exp4 = "1*2+3"
-
-
 def Expression_Converter(expression):
     operators = {
         "+": 1,
         "-": 1,
         "*": 2,
         "/": 2,
-        # ")": 0,
-        # "(": 0
     }
  
     stack = deque()
