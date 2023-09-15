@@ -11,13 +11,12 @@ def merge(Main_Array: deque[int], Left_Array: deque[int], Right_Array: deque[int
         Main_Array.append(Left_Array.popleft())
     while (Right_Array):
         Main_Array.append(Right_Array.popleft())
-    # print(Main_Array)
     return Main_Array
 
 
 def merge_Sort(array):
     if (len(array) < 2):
-        return
+        return array
     array_length = len(array)
     l_array = deque()
     r_array = deque()
@@ -54,6 +53,19 @@ test_merge_Sort([-7, 6, 23, 54, 2, 1], deque([-7, 1, 2, 6, 23, 54]))
 test_merge_Sort([4, 3, 2, 1], deque([1, 2, 3, 4]))
 test_merge_Sort([4, 3, 2, 1, 0, -1, 23], deque([-1, 0, 1, 2, 3, 4, 23]))
 test_merge_Sort(long_list, sorted_list)
+
+
+
+#Questions: 
+# 1) is there a way to always pull from the back and come out on top
+# 2) If your indeces are ordered, use a hashmap. Reindex if you run out of integers for your max. No reason to reindex every time. 
+# Not sure how those work under the hood in python, so id think that gives a penalty of an extra cpu instruction for every retrieval. 
+# Though, id think that would make up for it vs reindexing every time. So your average retrieval time should be more predictable.
+# You could also allocate a larger slice of memory than your max array and increment your “view” by one as you pop the first item. 
+# Though im not convinced this will be better than a hashmap in terms of number of instructions for the indirection.
+# Also were talking about python here so who knows.
+# 3) I don't even know where to start with fixed length lists. 
+# 4) Are dictionaries a hashmap under the hood?
 
 
 # test_merge([12, 234, 34, 453, 123, 214], [12, 34, 234], [123, 214, 453], [12,34,123,214,234,453])
