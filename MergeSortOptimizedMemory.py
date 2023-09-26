@@ -1,7 +1,7 @@
 import math
 from collections import deque
 
-def merge(Main_Array: deque[int], Left_Array: deque[int], Right_Array: deque[int]):
+def merge(Main_Array: deque[int], Left_Array: deque[int], Right_Array: deque[int]) -> deque[int]:
     while (Left_Array and Right_Array):
         if (Left_Array[0] <= Right_Array[0]):
             Main_Array.append(Left_Array.popleft())
@@ -14,7 +14,7 @@ def merge(Main_Array: deque[int], Left_Array: deque[int], Right_Array: deque[int
     return Main_Array
 
 
-def merge_Sort(array):
+def merge_Sort(array) -> deque[int]:
     if (len(array) < 2):
         return array
     array_length = len(array)
@@ -28,17 +28,17 @@ def merge_Sort(array):
     merge_Sort(r_array)
     return merge(array, l_array, r_array)
 
-def convert_to_deque(array: list[int]):
+def convert_to_deque(array: list[int]) -> deque[int]:
     opt_array = deque()
     while(array):
         opt_array.append(array.pop())
     print(opt_array)
     return opt_array
 
-def convert_to_deque_and_Merge_Sort(array):
+def convert_to_deque_and_Merge_Sort(array) -> deque[int]:
     return merge_Sort(convert_to_deque(array))
 
-def test_merge_Sort(input: list[int], expected: deque[int]):
+def test_merge_Sort(input: list[int], expected: deque[int]) -> None:
     output = convert_to_deque_and_Merge_Sort(input)
     status = "CORRECT" if output == expected else "FAILED"
     print(f'{status},input:{input}, output: {output}, expected: {expected}')
