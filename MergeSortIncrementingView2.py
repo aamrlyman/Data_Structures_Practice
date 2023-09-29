@@ -1,40 +1,40 @@
 import math
 
-class Sub_list():
+class SubList():
     def __init__(self, start:int, end:int)-> None:
         self.start = start
         self.end = end
     
-def merge(Original_list_and_copy: dict[str, list[int]], parent_sub_list: Sub_list, left_sub_list: Sub_list, right_sub_list: Sub_list) -> dict[str, list[int]]:
+def merge(Original_list_and_copy: dict[str, list[int]], parent_sub_list: SubList, left_sub_list: SubList, right_sub_list: SubList) -> dict[str, list[int]]:
     l_index = left_sub_list.start
     r_index = right_sub_list.start
     parent_index = parent_sub_list.start
     while (l_index <= left_sub_list.end and r_index <= right_sub_list.end):
-        if (Original_list_and_copy["Og"][l_index] <= Original_list_and_copy["Og"][r_index]):
-            Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Og"][l_index]
+        if (Original_list_and_copy["Original"][l_index] <= Original_list_and_copy["Original"][r_index]):
+            Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Original"][l_index]
             l_index += 1
         else:
-            Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Og"][r_index]
+            Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Original"][r_index]
             r_index += 1
         parent_index += 1
     while (l_index <= left_sub_list.end):
-        Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Og"][l_index]
+        Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Original"][l_index]
         l_index += 1
         parent_index += 1
     while (r_index <= right_sub_list.end):
-        Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Og"][r_index]
+        Original_list_and_copy["copy"][parent_index] = Original_list_and_copy["Original"][r_index]
         r_index += 1
         parent_index += 1
     for index in range(parent_sub_list.start, parent_sub_list.end+1):
-        Original_list_and_copy["Og"][index] = Original_list_and_copy["copy"][index]
+        Original_list_and_copy["Original"][index] = Original_list_and_copy["copy"][index]
 
     return Original_list_and_copy
 
-def merge_Sort(Original_list_and_copy: dict[str, list[int]], array_info: Sub_list) -> dict[str, list[int]]:
-    if ((len(Original_list_and_copy["Og"]) < 2) or ((array_info.end - array_info.start + 1) < 2)):
+def merge_Sort(Original_list_and_copy: dict[str, list[int]], array_info: SubList) -> dict[str, list[int]]:
+    if ((len(Original_list_and_copy["Original"]) < 2) or ((array_info.end - array_info.start + 1) < 2)):
         return Original_list_and_copy
-    left_sub_list = Sub_list(array_info.start, math.floor((array_info.start + array_info.start)/2) )
-    right_sub_list = Sub_list(left_sub_list.start+1, array_info.end)
+    left_sub_list = SubList(array_info.start, math.floor((array_info.start + array_info.start)/2) )
+    right_sub_list = SubList(left_sub_list.start+1, array_info.end)
     Original_list_and_copy = merge_Sort(Original_list_and_copy, left_sub_list)
     Original_list_and_copy = merge_Sort(Original_list_and_copy, right_sub_list)
     Original_list_and_copy = merge(Original_list_and_copy, array_info, left_sub_list, right_sub_list)
@@ -44,8 +44,8 @@ def Optimized_Merge_sort(Og_array: list[int]) -> list[int]:
     copy_array = []
     for num in Og_array:
         copy_array.append(num)
-    Original_list_and_copy = {"Og": Og_array, "copy": copy_array}
-    array_info = Sub_list(0,len(Original_list_and_copy["Og"])-1)
+    Original_list_and_copy = {"Original": Og_array, "copy": copy_array}
+    array_info = SubList(0,len(Original_list_and_copy["Original"])-1)
     merge_Sort(Original_list_and_copy, array_info)
     return Og_array
 
