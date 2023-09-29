@@ -1,9 +1,10 @@
 import math
+from dataclasses import dataclass
 
-class SubList():
-    def __init__(self, start:int, end:int)-> None:
-        self.start = start
-        self.end = end
+@dataclass
+class SubList:
+    start:int
+    end:int
     
 def merge(Original_list_and_copy: dict[str, list[int]], parent_sub_list: SubList, left_sub_list: SubList, right_sub_list: SubList) -> dict[str, list[int]]:
     l_index = left_sub_list.start
