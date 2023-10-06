@@ -6,61 +6,65 @@ class SubList:
     start:int
     end:int
 
-    
+class OriginalListAndCopy:
+    def __init__(self, original:list[int]) -> None:
+        self.original = original
+        self.original_is_reference:bool = True
+        self.copy:list[int] = self.original[:]
+        self.reference = self.original if self.original_is_reference else self.copy
+        self.working = self.copy if self.original_is_reference else self.original
+        self.list_length = len(original)
 
 
-def merge(Og_and_copy: dict[str, list[int]], parent_sub: SubList, l_sub: SubList, r_sub: SubList, og_is_ref: bool) -> dict[str, list[int]]:
+def merge(Original_and_copy: OriginalListAndCopy, parent_sub: SubList, l_sub: SubList, r_sub: SubList) -> OriginalListAndCopy:
     l_index = l_sub.start
     r_index = r_sub.start
-    ref = "Original" if og_is_ref else "copy"
-    working = "copy" if og_is_ref else "Original"
     parent_index = parent_sub.start
     while (l_index <= l_sub.end and r_index <= r_sub.end):
-        if (Og_and_copy[ref][l_index] <= Og_and_copy[ref][r_index]):
-            Og_and_copy[working][parent_index] = Og_and_copy[ref][l_index]
+        if (Original_and_copy.reference[l_index] <= Original_and_copy.reference[r_index]):
+            Original_and_copy.working[parent_index] = Original_and_copy.reference[l_index]
             l_index += 1
         else:
-            Og_and_copy[working][parent_index] = Og_and_copy[ref][r_index]
+            Original_and_copy.working[parent_index] = Original_and_copy.reference[r_index]
             r_index += 1
         parent_index += 1
     while (l_index <= l_sub.end):
-        Og_and_copy[working][parent_index] = Og_and_copy[ref][l_index]
+        Original_and_copy.working[parent_index] = Original_and_copy.reference[l_index]
         l_index += 1
         parent_index += 1
     while (r_index <= r_sub.end):
-        Og_and_copy[working][parent_index] = Og_and_copy[ref][r_index]
+        Original_and_copy.working[parent_index] = Original_and_copy.reference[r_index]
         r_index += 1
         parent_index += 1
-    return Og_and_copy
+    return Original_and_copy
 
-def merge_Sort(Original_and_copy: dict[str, list[int]], original_is_ref: bool, array_info: SubList) -> None:
-    original_is_ref = not original_is_ref
-    if ((len(Original_and_copy["Original"]) < 2) or ((array_info.end - array_info.start + 1) < 2)):
+def merge_Sort(Original_and_copy: OriginalListAndCopy, array_info: SubList) -> None:
+    Original_and_copy.original_is_reference = not Original_and_copy.original_is_reference
+    if ((len(Original_and_copy.original) < 2) or ((array_info.end - array_info.start + 1) < 2)):
         return 
     l_sub = SubList(array_info.start, math.floor((array_info.start + array_info.end)/2))
     r_sub = SubList(l_sub.end+1, array_info.end)
-    merge_Sort(Original_and_copy, original_is_ref, l_sub)
-    merge_Sort(Original_and_copy, original_is_ref, r_sub)
-    original_is_ref = not original_is_ref
-    merge(Original_and_copy, array_info, l_sub, r_sub, original_is_ref)
+    merge_Sort(Original_and_copy, l_sub)
+    merge_Sort(Original_and_copy, r_sub)
+    Original_and_copy.original_is_reference = not Original_and_copy.original_is_reference
+    merge(Original_and_copy, array_info, l_sub, r_sub)
 
 
-def Optimized_Merge_sort(Og_array: list[int]) -> list[int]:
+def Optimized_Merge_sort(Original_list: list[int]) -> list[int]:
     copy_array = []
-    for num in Og_array:
+    for num in Original_list:
         copy_array.append(num)
-    Og_and_copy = {"Original": Og_array, "copy": copy_array}
-    og_is_ref = True
-    array_info = SubList(0, len(Og_and_copy["Original"])-1)
-    merge_Sort(Og_and_copy, og_is_ref, array_info)
-    if ( og_is_ref):
+    Original_and_copy = OriginalListAndCopy(Original_list)
+    array_info = SubList(0, len(Original_and_copy.original)-1)
+    merge_Sort(Original_and_copy, array_info)
+    if (Original_and_copy.original_is_reference):
         index = 0
         for num in copy_array:
-            Og_array[index] = num
+            Original_list[index] = num
             index += 1
-        return Og_array
+        return Original_list
     else:
-        return Og_array
+        return Original_list
 
 
 def test_merge_Sort(input: list[int], expected: list[int]) -> None:
