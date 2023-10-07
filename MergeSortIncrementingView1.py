@@ -6,71 +6,73 @@ class SubList:
     start:int
     end:int
 
-class OriginalListAndCopy:
-    def __init__(self, original:list[int]) -> None:
-        self.original = original
-        self.original_is_reference:bool = True
-        self.copy:list[int] = self.original[:]
-        self.reference = self.original if self.original_is_reference else self.copy
-        self.working = self.copy if self.original_is_reference else self.original
-        self.list_length = len(original)
 
-
-def merge(Original_and_copy: OriginalListAndCopy, parent_sub: SubList, l_sub: SubList, r_sub: SubList) -> OriginalListAndCopy:
+def merge(Og_and_copy: dict[str, list[int]], parent_sub: SubList, l_sub: SubList, r_sub: SubList, og_is_ref: bool) -> tuple [dict[str, list[int]], bool]:
     l_index = l_sub.start
     r_index = r_sub.start
+    ref = "Original" if og_is_ref else "copy"
+    working = "copy" if og_is_ref else "Original"
     parent_index = parent_sub.start
     while (l_index <= l_sub.end and r_index <= r_sub.end):
-        if (Original_and_copy.reference[l_index] <= Original_and_copy.reference[r_index]):
-            Original_and_copy.working[parent_index] = Original_and_copy.reference[l_index]
+        if (Og_and_copy[ref][l_index] <= Og_and_copy[ref][r_index]):
+            Og_and_copy[working][parent_index] = Og_and_copy[ref][l_index]
             l_index += 1
         else:
-            Original_and_copy.working[parent_index] = Original_and_copy.reference[r_index]
+            Og_and_copy[working][parent_index] = Og_and_copy[ref][r_index]
             r_index += 1
         parent_index += 1
     while (l_index <= l_sub.end):
-        Original_and_copy.working[parent_index] = Original_and_copy.reference[l_index]
+        Og_and_copy[working][parent_index] = Og_and_copy[ref][l_index]
         l_index += 1
         parent_index += 1
     while (r_index <= r_sub.end):
-        Original_and_copy.working[parent_index] = Original_and_copy.reference[r_index]
+        Og_and_copy[working][parent_index] = Og_and_copy[ref][r_index]
         r_index += 1
         parent_index += 1
-    return Original_and_copy
+    # print(Og_and_copy, og_is_ref)
+    return Og_and_copy, og_is_ref
 
-def merge_Sort(Original_and_copy: OriginalListAndCopy, array_info: SubList) -> None:
-    Original_and_copy.original_is_reference = not Original_and_copy.original_is_reference
-    if ((len(Original_and_copy.original) < 2) or ((array_info.end - array_info.start + 1) < 2)):
+def merge_Sort(Original_and_copy: dict[str, list[int]], original_is_ref: bool, array_info: SubList) -> None:
+    original_is_ref = not original_is_ref
+    if ((len(Original_and_copy["Original"]) < 2) or ((array_info.end - array_info.start + 1) < 2)):
         return 
     l_sub = SubList(array_info.start, math.floor((array_info.start + array_info.end)/2))
     r_sub = SubList(l_sub.end+1, array_info.end)
-    merge_Sort(Original_and_copy, l_sub)
-    merge_Sort(Original_and_copy, r_sub)
-    Original_and_copy.original_is_reference = not Original_and_copy.original_is_reference
-    merge(Original_and_copy, array_info, l_sub, r_sub)
+    merge_Sort(Original_and_copy, original_is_ref, l_sub)
+    merge_Sort(Original_and_copy, original_is_ref, r_sub)
+    merge(Original_and_copy, array_info, l_sub, r_sub, original_is_ref)
 
 
-def Optimized_Merge_sort(Original_list: list[int]) -> list[int]:
-    copy_array = []
-    for num in Original_list:
-        copy_array.append(num)
-    Original_and_copy = OriginalListAndCopy(Original_list)
-    array_info = SubList(0, len(Original_and_copy.original)-1)
-    merge_Sort(Original_and_copy, array_info)
-    if (Original_and_copy.original_is_reference):
+def Optimized_Merge_sort(Origianl_array: list[int]) -> list[int]:
+    copy_array = Origianl_array[:]
+    Og_and_copy = {"Original": Origianl_array, "copy": copy_array}
+    og_is_ref = False
+    array_info = SubList(0, len(Og_and_copy["Original"])-1)
+    merge_Sort(Og_and_copy, og_is_ref, array_info)
+    if (not og_is_ref):
         index = 0
         for num in copy_array:
-            Original_list[index] = num
+            Origianl_array[index] = num
             index += 1
-        return Original_list
+        return Origianl_array
     else:
-        return Original_list
+        return Origianl_array
 
 
 def test_merge_Sort(input: list[int], expected: list[int]) -> None:
     output = Optimized_Merge_sort(input)
     status = "CORRECT" if output == expected else "FAILED"
     print(f'{status}, output: {output}, expected: {expected}')
+
+# print(merge([2,1], [2,1],{"start":0, "end": 1}, {"start":0, "end":0}, {"start":1, "end":1}))
+# print(merge([3,4,1,2], [3,4,1,2],{"start":0, "end": 3}, {"start":0, "end":1}, {"start":2, "end":3}))
+# print(merge([-1,4,1,2], [-1,4,1,2],{"start":0, "end": 3}, {"start":0, "end":1}, {"start":2, "end":3}))
+
+
+# def test_merge_Sort(input: list[int], expected: list[int]) -> None:
+#     output = merge(input)
+#     status = "CORRECT" if output == expected else "FAILED"
+#     print(f'{status},input:{input}, output: {output}, expected: {expected}')
 
 long_list = [749, 220, 95, 80, 159, 416, 514, 414, 681, 299, 198, 567, 950, 289, 438, 15, 130, 926, 702, 907, 440, 256, 175, 861, 225, 2, 597, 964, 845, 643, 58, 772, 706, 625, 625, 208, 876, 201, 647, 649, 735, 595, 187, 465, 548, 371, 145, 900, 220, 433, 559, 479, 61, 188, 396, 46, 708, 50, 378, 686, 515, 857, 706, 561, 154, 238, 853, 987, 146, 10, 556, 307, 196, 880, 437, 796, 745, 233, 284, 420, 35, 648, 578, 287, 675, 110, 595, 543, 885, 379, 833, 490, 621, 943, 31, 700, 463, 444, 930, 216, 324, 52, 457, 793, 579, 221, 771, 129, 709, 157, 22, 804, 945, 686, 994, 186, 350, 749, 365, 755, 397, 772, 87, 356, 115, 15, 844, 398, 909, 428, 606, 664, 552, 481, 696, 710, 946, 66, 759, 9, 1, 998, 502, 239, 654, 756, 303, 662, 100,
              686, 846, 18, 906, 517, 821, 350, 533, 945, 633, 972, 698, 865, 978, 226, 383, 5, 614, 424, 543, 554, 928, 524, 360, 171, 208, 700, 432, 294, 721, 260, 97, 650, 57, 815, 638, 754, 548, 787, 284, 52, 532, 335, 415, 415, 237, 707, 393, 392, 593, 921, 54, 818, 522, 685, 38, 471, 948, 302, 153, 477, 698, 903, 323, 803, 613, 240, 290, 107, 981, 886, 917, 629, 941, 314, 952, 854, 102, 342, 693, 70, 263, 864, 174, 369, 910, 669, 529, 682, 61, 562, 581, 245, 9, 116, 442, 924, 626, 533, 591, 6, 62, 606, 825, 352, 295, 744, 621, 94, 218, 834, 693, 659, 414, 163, 489, 347, 23, 363, 347, 736, 843, 341, 980, 988, 793, 81, 362, 104, 934, 69, 415, 86, 181, 569, 987, 778, 761, 861, 39, 478, 788, 711, 286, 791, 137, 689, 376, 723, 846, 356]
