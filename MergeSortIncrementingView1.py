@@ -13,14 +13,11 @@ class OriginalListAndCopy:
         self.copy:list[int] = self.original[:]
         self.reference = self.original if self.original_is_reference else self.copy
         self.working = self.copy if self.original_is_reference else self.original
-        self.list_length = len(original)
 
 
-def merge(Original_and_copy: OriginalListAndCopy, parent_sub: SubList, l_sub: SubList, r_sub: SubList, og_is_ref: bool) ->tuple[ OriginalListAndCopy, bool]:
+def merge(Original_and_copy: OriginalListAndCopy, parent_sub: SubList, l_sub: SubList, r_sub: SubList) ->OriginalListAndCopy:
     l_index = l_sub.start
     r_index = r_sub.start
-    ref = "Original" if og_is_ref else "copy"
-    working = "copy" if og_is_ref else "Original"
     parent_index = parent_sub.start
     while (l_index <= l_sub.end and r_index <= r_sub.end):
         if (Original_and_copy.reference[l_index] <= Original_and_copy.reference[r_index]):
@@ -38,26 +35,25 @@ def merge(Original_and_copy: OriginalListAndCopy, parent_sub: SubList, l_sub: Su
         Original_and_copy.working[parent_index] = Original_and_copy.reference[r_index]
         r_index += 1
         parent_index += 1
-    return Original_and_copy, og_is_ref
+    return Original_and_copy
 
-def merge_Sort(Original_and_copy: OriginalListAndCopy, original_is_ref: bool, array_info: SubList) -> None:
-    original_is_ref = not original_is_ref
+def merge_Sort(Original_and_copy: OriginalListAndCopy, array_info: SubList) -> None:
+    Original_and_copy.original_is_reference = not Original_and_copy.original_is_reference
     if ((len(Original_and_copy.original) < 2) or ((array_info.end - array_info.start + 1) < 2)):
         return 
     l_sub = SubList(array_info.start, math.floor((array_info.start + array_info.end)/2))
     r_sub = SubList(l_sub.end+1, array_info.end)
-    merge_Sort(Original_and_copy, original_is_ref, l_sub)
-    merge_Sort(Original_and_copy, original_is_ref, r_sub)
-    merge(Original_and_copy, array_info, l_sub, r_sub, original_is_ref)
+    merge_Sort(Original_and_copy, l_sub)
+    merge_Sort(Original_and_copy, r_sub)
+    merge(Original_and_copy, array_info, l_sub, r_sub)
 
 
 def Optimized_Merge_sort(Origianl_array: list[int]) -> list[int]:
     copy_array = Origianl_array[:]
-    Og_and_copy = OriginalListAndCopy(Origianl_array)
-    og_is_ref = True
+    Original_and_copy = OriginalListAndCopy(Origianl_array)
     array_info = SubList(0, len(Origianl_array)-1)
-    merge_Sort(Og_and_copy, og_is_ref, array_info)
-    if (not og_is_ref): Origianl_array = copy_array[:]  
+    merge_Sort(Original_and_copy, array_info)
+    if (not Original_and_copy.original_is_reference): Origianl_array = copy_array[:]  
     return Origianl_array
 
 
