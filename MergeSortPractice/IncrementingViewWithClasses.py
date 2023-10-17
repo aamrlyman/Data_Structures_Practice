@@ -17,9 +17,9 @@ class OriginalListAndCopy:
         self.working = self.copy if self.original_is_reference else self.original
 
     def toggle_ref_list(self) -> None:
+        self.original_is_reference = not self.original_is_reference
         self.reference = self.original if self.original_is_reference else self.copy
         self.working = self.copy if self.original_is_reference else self.original
-        self.original_is_reference = not self.original_is_reference
 
 
 def merge(Original_and_copy: OriginalListAndCopy, parent_sub: SubList, l_sub: SubList, r_sub: SubList) -> None:
@@ -45,15 +45,16 @@ def merge(Original_and_copy: OriginalListAndCopy, parent_sub: SubList, l_sub: Su
 
 
 def merge_Sort(Original_and_copy: OriginalListAndCopy, array_info: SubList) -> None:
-    Original_and_copy.toggle_ref_list()
-    if ((len(Original_and_copy.original) < 2) or ((array_info.end - array_info.start + 1) < 2)):
+    if ((array_info.end - array_info.start + 1) < 2):
         return
+    Original_and_copy.toggle_ref_list()
     l_sub = SubList(array_info.start, math.floor(
         (array_info.start + array_info.end)/2))
     r_sub = SubList(l_sub.end+1, array_info.end)
     merge_Sort(Original_and_copy, l_sub)
     merge_Sort(Original_and_copy, r_sub)
     merge(Original_and_copy, array_info, l_sub, r_sub)
+    Original_and_copy.toggle_ref_list()
 
 
 def Optimized_Merge_sort(Origianl_array: list[int]) -> list[int]:

@@ -5,14 +5,23 @@
 # steps
 #   decalare a vowels list ["a", "e", "o", "u"]
 #   loop through the string
-#   check if the char is alpha, if so maek it lowercase
+#   check if the char is alpha, if so make it lowercase
 #   check if its vowel if it is, use the get function 
 #   
 
+        
+
+
 def count_vowels_consonants(input_string: str)-> dict[str,dict[str,int]]:
-    vowel_and_consonant_count = {}
-    vowels = ["a", "e", "o", "i", "u"]
+    vowel_and_consonant_count = {"vowels":{"a":0, "e":0, "o":0, "i":0, "u":0}, "consonants":{}}
     for char in input_string:
-        if char.isalnum() and char != ' ':
-            char_count[char] = char_count.get(char, 0) + 1
-    return char_count
+        if char.isalpha():
+            if char in vowel_and_consonant_count["vowels"]:
+                vowel_and_consonant_count["vowels"][char] = vowel_and_consonant_count["vowels"][char] + 1
+            else:
+                vowel_and_consonant_count["consonants"][char] = vowel_and_consonant_count["consonants"].get(char,0) + 1
+        else:
+            continue
+    return vowel_and_consonant_count
+
+count_vowels_consonants("abc")
