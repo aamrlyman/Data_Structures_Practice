@@ -12,7 +12,7 @@ sorted_long_list = [1, 2, 5, 6, 9, 9, 10, 15, 15, 18, 22, 23, 31, 35, 38, 39, 46
     (long_list, sorted_long_list),
     ([1, 0, -1], [-1, 0, 1]),
     ([1, 1.1, 1.01], [1, 1.01, 1.1]),
-    ([1, 1.1, 1.01], [1, 1.01, 2, 1.1]),
+    ([1, 1.1, 1.01], [1, 1.01, 1.1]),
 ])
 def test_Optimized_Merge_sort(input_value, expected_output):
     result = Optimized_Merge_sort(input_value)

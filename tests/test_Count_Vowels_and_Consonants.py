@@ -1,4 +1,4 @@
-from Count_Vowels_in_String import count_vowels_consonants
+from Algorithms.Count_Vowels_in_String import count_vowels_consonants
 import pytest
 
 @pytest.mark.parametrize("input_value, expected_output", [
