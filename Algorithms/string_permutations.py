@@ -1,0 +1,24 @@
+# Problem Eight: Create a function that calculates all possible permutations of a given string
+# ab, ba, 
+# abc acb bac bca cab cba
+import math
+
+def stringPermutations(string:str):
+    return math.factorial(len(string))
+
+
+def string_permutations_recursion(stringLength:int)->int:
+    if(stringLength==1): 
+        return 1
+    else:
+        return string_permutations_recursion(stringLength-1)*stringLength;
+def get_string_length_and_permutations(string:str):
+    stringlength: int = len(string)
+    return string_permutations_recursion(stringlength)
+
+def string_permutations_forloop(string:str)->int:
+    n = len(string)
+    result = 1
+    for index in range(n,0, -1):
+        result *=index
+    return result
