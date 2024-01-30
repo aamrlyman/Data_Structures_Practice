@@ -11,3 +11,5 @@ def isAnagram(string1:str, string2:str) ->bool:
         return string_to_dict(string1) == string_to_dict(string2)
 
 print(isAnagram("abc", "acb"))
+
+print(isAnagram("aacb", "acb"))
