@@ -1,7 +1,6 @@
 from Algorithms.string_permutations import stringPermutations, string_permutations_forloop, get_string_length_and_permutations
 import pytest
 
-
 @pytest.mark.parametrize("input_value, expected_output", [
     ("a", 1),
     ("aaaa", 1),
@@ -18,6 +17,15 @@ import pytest
     ("",1),
     ("!@#$%^&&*())",119750400),
 ])
+
+
+
+
+
+
+
+
+
 def test_stringPermutations(input_value, expected_output):
     result = stringPermutations(input_value)
     assert result == expected_output
