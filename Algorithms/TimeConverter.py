@@ -3,8 +3,6 @@
 # and return the value converted to a new unit with the new unit and converting any remainder values into smaller units. 
 # integers and decimals will be handled
 
-# steps 
-# 
 from dataclasses import dataclass
 from enum import Enum
 
@@ -22,30 +20,37 @@ units: dict[UnitName,int] = {
     UnitName.millisecond: 1,
 }
 
+def formatOutPutString(outPutDict:dict[UnitName,int],negativeCase:str)->str:
+    outPutString = ""
+    outPutList:list[str] = []
+    for key,value in outPutDict.items():
+        if(value > 0):
+            plural_suffix = "s" if value > 1 else ""
+            unitString = f'{value} {key.value}{plural_suffix}'
+            outPutList.append(unitString)
+    outPutListLength = len(outPutList)
+    for index,string in enumerate(outPutList):
+        puncuation = "," if(outPutListLength > 1 and index < outPutListLength-1 ) else ""   
+        outPutString+=f'{negativeCase}{string}{puncuation} '
+    outPutString = outPutString.strip() if outPutString.strip() else "0" 
+    return outPutString
+
+
 def unit_conversion(amount:int, inputUnit:UnitName, outputUnit:UnitName, units: dict[UnitName,int])->str:
+    negativeCase = ""
+    if(amount < 0):
+        amount = abs(amount)
+        negativeCase = "-"
     unitOrder = [x for x in units]
     outPutDict = {}
-    outPutString = ""
     if(units[inputUnit] > units[outputUnit]): return f'{amount * units[inputUnit]//units[outputUnit]} {outputUnit.value}s'
     else: 
+        if(inputUnit.value != UnitName.millisecond):
+            amount *=units[inputUnit]
         for index in range(unitOrder.index(outputUnit), len(unitOrder)):
             outPutDict[unitOrder[index]] = amount // units[unitOrder[index]]
             remainder = amount % units[unitOrder[index]]
             amount = remainder
-    for key,value in outPutDict.items():
-        plural_suffix = "s" if value > 1 else ""
-        # puncuation = "" if value == UnitName.millisecond else ", " 
-        if(value > 0):
-            outPutString+= f'{value} {key.value}{plural_suffix}'
-    return outPutString
+    return formatOutPutString(outPutDict, negativeCase)
 
-amount = unit_conversion(3600000, UnitName.millisecond, UnitName.hour, units)
-print(amount)
-
-
-
-
-# put all units in relation to the smallest baseline unit. Sort it apply the logic 
-# name and relation to smallest unit 
-# 0 hours 0 minutes 45 seconds ?? 
 
