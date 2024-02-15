@@ -6,13 +6,16 @@
 from dataclasses import dataclass
 from enum import Enum
 class UnitName(Enum):
+    day = "day"
     hour = "hour"
     minute = "minute"
     second = "second"
     millisecond = "millisecond"
 
 
+
 units: dict[UnitName, int] = {
+    UnitName.day: 86400000,
     UnitName.hour: 3600000,
     UnitName.minute: 60000,
     UnitName.second: 1000,
@@ -33,7 +36,7 @@ def formatOutPutString(outPutDict: dict[UnitName, int], negativeCase: str) -> st
         puncuation = "," if (outPutListLength > 1 and index <
                              outPutListLength-1) else ""
         outPutString += f'{negativeCase}{string}{puncuation} '
-    outPutString = outPutString.strip() if outPutString.strip() else "0"
+    outPutString = outPutString.strip() or "0"
     return outPutString
 
 def unit_conversion(amount: int, inputUnit: UnitName, outputUnit: UnitName, units: dict[UnitName, int]) -> str:
@@ -55,9 +58,6 @@ def unit_conversion(amount: int, inputUnit: UnitName, outputUnit: UnitName, unit
             amount = remainder
     return formatOutPutString(outPutDict, positiveOrNegativePrefix)
 
-set = {"a", "b","c"}
-print(set)
-tuple = (1,2,3,4)
-for index in range(len(tuple)):
-    print(index)
-    print(tuple[index])
+
+# sepearate unit conversion and format and unit test both separately
+
