@@ -13,21 +13,6 @@ def stringPermutations(string:str)->float:
     return math.factorial(len(string))/denominator
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def string_permutations_recursion(stringLength:int)->int:
     if(stringLength==1): 
         return 1
