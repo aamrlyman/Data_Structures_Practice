@@ -66,3 +66,5 @@ myFam = [
 def printDictList(myFam: list[dict[str,str]]):
     for person in myFam:
         print(f'{person["First Name"]}, {person["Relation to Rick"]}')
+
+
