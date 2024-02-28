@@ -17,4 +17,6 @@ if __name__ == "__main__":
     linkedList.append_node(60)
     linkedList.append_node(65)
 
-    linkedList.find_Node(67)
+    linkedList.is_Data_in_list(67)
+
+    
