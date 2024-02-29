@@ -5,38 +5,21 @@
 # 4. Push list items with isMultiple=false into a lsit 
 import math
 
-exampleList = [
-               {'value': 2, 'isMultiple': False}, 
-               {'value': 3, 'isMultiple': False}, 
-               {'value': 4, 'isMultiple': False}, 
-               {'value': 5, 'isMultiple': False}, 
-               {'value': 6, 'isMultiple': False}, 
-               {'value': 7, 'isMultiple': False}, 
-               {'value': 8, 'isMultiple': False}, 
-               {'value': 9, 'isMultiple': False},
-               {'value': 10, 'isMultiple': False}]
-
-def crossOutMultiple(newList:list, startingIndex:int, incrementer:int):
-    for i in range(startingIndex,len(newList),incrementer):
-        newList[i]["isMultiple"] = True
-
-
-
-
-def crossOutMultiples(newList:list, numberLimit:int)->None:
-    multiples = [multiple for multiple in range(2,int(math.sqrt(numberLimit))+1)]
-    for index,multiple in enumerate(multiples):
-        if(newList[index]["isMultiple"] == True): continue
-
 
 
 def primeNumberGenerator(numberLimit:int)->list[int]:
-    if(numberLimit < 2): return [0]
+    if(numberLimit < 2): return []
     newList = [{"value":num, "isMultiple":False} for num in range(2, numberLimit+1)]
     crossOutMultiples(newList,numberLimit)
     return [x['value'] for x in newList if x["isMultiple"]==False]
 
-# primseList = primeNumberGenerator(10)
-# print(primseList)
+def crossOutMultiples(newList:list, numberLimit:int):
+    multiples = [multiple for multiple in range(2,int(math.sqrt(numberLimit))+1)] # Math rule: you don't need to check multiples larger than the numberlimit's square root
+    for index,multiple in enumerate(multiples):
+        if(newList[index]["isMultiple"] == True): continue
+        startingIndex = (multiple * 2 ) - 2 # multiple by 2--we don't want to cross out the starting multiple, minus 2 because list[0] == 2
+        crossOutMultiple(newList, startingIndex, multiple)
 
-print([{"value":x,"isMultiple":False } for x in range(2,11)])
+def crossOutMultiple(newList:list, startingIndex:int, incrementer:int):
+    for i in range(startingIndex,len(newList),incrementer):
+        newList[i]["isMultiple"] = True
